@@ -28,6 +28,12 @@
  */
 @property (nonatomic, strong) NSAttributedString *attributedPlaceholder;
 
+/** The color for placeholder text
+ 
+ The default is light gray
+ */
+@property (nonatomic, strong) UIColor *placeholderColor;
+
 /**
  Returns the drawing rectangle for the text views’s placeholder text.
 
