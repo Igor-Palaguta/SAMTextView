@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'SAMTextView'
-  s.version = '0.2.2'
+  s.version = '0.2.3'
   s.authors = {'Sam Soffes' => 'sam@soff.es'}
   s.homepage = 'https://github.com/soffes/SAMTextView'
   s.summary = 'Add a placeholder to UITextView.'

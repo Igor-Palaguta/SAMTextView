@@ -128,8 +128,34 @@
 	}
 }
 
+-(CGSize)intrinsicContentSize {
+   if (self.text.length == 0 && self.attributedPlaceholder) {
+      CGSize boundingSize = [self placeholderRectForBounds:self.bounds].size;
+      boundingSize.height = MAXFLOAT;
+      CGRect placeholderRect = [self.attributedPlaceholder boundingRectWithSize:boundingSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:0];
+      return [self boundsForContentWithSize: placeholderRect.size].size;
+   }
+   return [super intrinsicContentSize];
+}
 
 #pragma mark - Placeholder
+
+- (CGRect)boundsForContentWithSize:(CGSize)size {
+   CGRect bounds = (CGRect){.origin = CGPointZero, .size = size};
+   bounds.size.height += self.contentInset.top + self.contentInset.bottom;
+   bounds.size.width += self.contentInset.left + self.contentInset.right;
+
+   if ([self respondsToSelector:@selector(textContainer)]) {
+      
+      bounds.size.height += self.textContainerInset.top + self.textContainerInset.bottom;
+      bounds.size.width += self.textContainerInset.left + self.textContainerInset.right;
+
+      CGFloat padding = self.textContainer.lineFragmentPadding;
+      bounds.size.width += padding * 2.0f;
+   }
+
+   return bounds;
+}
 
 - (CGRect)placeholderRectForBounds:(CGRect)bounds {
 	CGRect rect = UIEdgeInsetsInsetRect(bounds, self.contentInset);
