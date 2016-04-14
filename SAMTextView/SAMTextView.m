@@ -16,19 +16,22 @@
 
 - (void)setText:(NSString *)string {
 	[super setText:string];
-	[self setNeedsDisplay];
+   [self setNeedsDisplay];
+   [self invalidateIntrinsicContentSize];
 }
 
 
 - (void)insertText:(NSString *)string {
 	[super insertText:string];
-	[self setNeedsDisplay];
+   [self setNeedsDisplay];
+   [self invalidateIntrinsicContentSize];
 }
 
 
 - (void)setAttributedText:(NSAttributedString *)attributedText {
 	[super setAttributedText:attributedText];
-	[self setNeedsDisplay];
+   [self setNeedsDisplay];
+   [self invalidateIntrinsicContentSize];
 }
 
 
@@ -67,19 +70,22 @@
 
 	_attributedPlaceholder = attributedPlaceholder;
 
-	[self setNeedsDisplay];
+   [self setNeedsDisplay];
+   [self invalidateIntrinsicContentSize];
 }
 
 
 - (void)setContentInset:(UIEdgeInsets)contentInset {
 	[super setContentInset:contentInset];
-	[self setNeedsDisplay];
+   [self setNeedsDisplay];
+   [self invalidateIntrinsicContentSize];
 }
 
 
 - (void)setFont:(UIFont *)font {
 	[super setFont:font];
-	[self setNeedsDisplay];
+   [self setNeedsDisplay];
+   [self invalidateIntrinsicContentSize];
 }
 
 
@@ -132,9 +138,14 @@
    if (self.text.length == 0 && self.attributedPlaceholder) {
       CGSize boundingSize = [self placeholderRectForBounds:self.bounds].size;
       boundingSize.height = MAXFLOAT;
-      CGRect placeholderRect = [self.attributedPlaceholder boundingRectWithSize:boundingSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:0];
+      CGRect placeholderRect = CGRectIntegral([self.attributedPlaceholder boundingRectWithSize:boundingSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:0]);
       return [self boundsForContentWithSize: placeholderRect.size].size;
    }
+
+   if (self.scrollEnabled) {
+      return self.contentSize;
+   }
+
    return [super intrinsicContentSize];
 }
 
@@ -182,9 +193,9 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textChanged:) name:UITextViewTextDidChangeNotification object:self];
 }
 
-
 - (void)textChanged:(NSNotification *)notification {
 	[self setNeedsDisplay];
+   [self invalidateIntrinsicContentSize];
 }
 
 @end
